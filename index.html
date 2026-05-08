@@ -464,6 +464,26 @@
         min-height: 420px;
       }
     }
+
+    /* 모바일 컨트롤 슬롯 - 미리보기 하단에 위치 */
+    #mobileControlSlot {
+      display: none;
+    }
+
+    #mobileControlSlot:not(:empty) {
+      display: block;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+    }
+
+    #mobileControlSlot .field {
+      margin-bottom: 12px;
+    }
+
+    #mobileControlSlot .field:last-child {
+      margin-bottom: 0;
+    }
   </style>
 </head>
 <body>
@@ -585,7 +605,7 @@
           </div>
         </div>
 
-        <div class="field">
+        <div class="field mobile-movable" id="offsetField">
           <label>글자 위치 미세조정</label>
           <div class="offset-controls">
             <div class="offset-row">
@@ -602,7 +622,7 @@
           </div>
         </div>
 
-        <div class="field">
+        <div class="field mobile-movable" id="scaleField">
           <label>글자 크기 조정</label>
           <div class="offset-controls">
             <div class="offset-row">
@@ -640,6 +660,7 @@
         <div class="canvas-box">
           <canvas id="sealCanvas" width="900" height="900"></canvas>
         </div>
+        <div id="mobileControlSlot"></div>
         <div class="note">
           PNG는 투명 배경으로 저장됩니다.<br />
           본 이미지 메이커는 무료 배포용이며 상업적 사용을 금합니다.
@@ -1229,6 +1250,40 @@
     updateOffsetLabels();
     updateScaleLabel();
     updateFieldVisibility();
+
+    // ─── 모바일에서 위치/크기 조정 패널을 미리보기 하단으로 이동 ───
+    const offsetField = document.getElementById('offsetField');
+    const scaleField = document.getElementById('scaleField');
+    const mobileSlot = document.getElementById('mobileControlSlot');
+
+    // 원위치 복원을 위한 placeholder anchor (보이지 않는 빈 노드)
+    const offsetAnchor = document.createComment('offsetField-anchor');
+    const scaleAnchor = document.createComment('scaleField-anchor');
+    offsetField.parentNode.insertBefore(offsetAnchor, offsetField);
+    scaleField.parentNode.insertBefore(scaleAnchor, scaleField);
+
+    const MOBILE_BREAKPOINT = 700;
+    let isMobileLayout = null;
+
+    function applyResponsiveLayout() {
+      const shouldBeMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+      if (shouldBeMobile === isMobileLayout) return;
+      isMobileLayout = shouldBeMobile;
+
+      if (shouldBeMobile) {
+        // 모바일: 미리보기 하단 슬롯으로 이동
+        mobileSlot.appendChild(offsetField);
+        mobileSlot.appendChild(scaleField);
+      } else {
+        // PC: 원래 anchor 앞에 다시 삽입
+        offsetAnchor.parentNode.insertBefore(offsetField, offsetAnchor);
+        scaleAnchor.parentNode.insertBefore(scaleField, scaleAnchor);
+      }
+    }
+
+    applyResponsiveLayout();
+    window.addEventListener('resize', applyResponsiveLayout);
+    window.addEventListener('orientationchange', applyResponsiveLayout);
 
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => renderSeal());
