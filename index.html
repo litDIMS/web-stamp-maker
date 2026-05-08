@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>무료 도장 이미지메이커</title>
+  <style>
+    @font-face {
+      font-family: 'HangulGoin1';
+      src: url('./fonts/HangulGoin1.ttf') format('truetype');
+      font-display: block;
+    }
+    @font-face {
+      font-family: 'HanjaHaeseo';
+      src: url('./fonts/HanjaHaeseo.ttf') format('truetype');
+      font-display: block;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background: #f5f6f8;
+      color: #222;
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .top-banner {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .top-banner img {
+      max-width: 260px;
+      height: auto;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      text-align: center;
+    }
+
+    .title-note {
+      font-size: 12px;
+      color: #777;
+      margin: 0 0 20px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
+    }
+
+    .panel {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .panel h2 {
+      margin: 0 0 16px;
+      font-size: 20px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d8dce2;
+      border-radius: 10px;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    .field textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .font-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .font-toggle button {
+      padding: 12px 10px;
+      border: 1px solid #d8dce2;
+      border-radius: 10px;
+      background: #fff;
+      color: #444;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .font-toggle button:hover {
+      background: #f5f6f8;
+    }
+
+    .font-toggle button.active {
+      background: #111;
+      color: #fff;
+      border-color: #111;
+    }
+
+    .font-toggle button .sample {
+      display: block;
+      font-size: 22px;
+      font-weight: 400;
+      margin-top: 2px;
+      letter-spacing: 2px;
+    }
+
+    .font-toggle button[data-font="HangulGoin1"] .sample {
+      font-family: 'HangulGoin1', sans-serif;
+    }
+
+    .font-toggle button[data-font="HanjaHaeseo"] .sample {
+      font-family: 'HanjaHaeseo', serif;
+    }
+
+    .btns {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #111;
+      color: #fff;
+    }
+
+    button.secondary {
+      background: #e9edf2;
+      color: #222;
+    }
+
+    .preview {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .canvas-box {
+      width: 100%;
+      background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: inset 0 0 0 1px #eceff3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 620px;
+      overflow: hidden;
+    }
+
+    canvas {
+      max-width: 100%;
+      height: auto;
+      background: transparent;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+      width: 100%;
+    }
+
+    .sub-note {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #888;
+      line-height: 1.5;
+    }
+
+    .store-box {
+      text-align: center;
+      margin-top: 14px;
+      padding-top: 12px;
+    }
+
+    .store-btn {
+      display: inline-block;
+      background: #03c75a;
+      color: #fff;
+      font-weight: 700;
+      padding: 12px 22px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+
+    .store-btn:hover {
+      background: #02b351;
+    }
+
+    .share-box {
+      margin-top: 18px;
+      padding-top: 10px;
+      border-top: 1px solid #eceff3;
+    }
+
+    .share-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .share-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .share-btn {
+      background: #eef2f6;
+      color: #222;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 0;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .share-btn:hover {
+      background: #dde5ee;
+    }
+
+    .share-message {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+      min-height: 18px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .canvas-box {
+        min-height: 420px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top-banner">
+      <a href="https://smartstore.naver.com/stampify" target="_blank" rel="noopener noreferrer">
+        <img src="./stampify.jpg" alt="Stampify Smartstore">
+      </a>
+    </div>
+
+    <h1>무료 도장 이미지메이커</h1>
+    <div class="title-note">
+      본 이미지 메이커는 스탬피파이에서 배포한 무료 도장 이미지메이커로서,
+      무료 이미지를 제공하기 위하여 만들어진 것이므로 상업적 사용을 금합니다.
+    </div>
+
+    <div class="layout">
+      <div class="panel">
+        <h2>설정</h2>
+
+        <div class="field">
+          <label for="stampType">도장 종류</label>
+          <select id="stampType">
+            <option value="circle_personal">일반 원형도장</option>
+            <option value="square">사각 직인</option>
+            <option value="circle_corporate">법인 원형도장</option>
+          </select>
+        </div>
+
+        <div id="circlePersonalFields">
+          <div class="field">
+            <label for="personalText">이름</label>
+            <input id="personalText" type="text" value="" maxlength="8" placeholder="이름 입력" />
+          </div>
+        </div>
+
+        <div id="squareFields" style="display:none;">
+          <div class="field">
+            <label for="squareText">사각직인 글자</label>
+            <input id="squareText" type="text" value="" maxlength="4" placeholder="최대 4글자 입력" />
+            <div class="sub-note">4글자 배치 순서: 1,2 / 3,4</div>
+          </div>
+        </div>
+
+        <div id="circleCorporateFields" style="display:none;">
+          <div class="field">
+            <label for="corpOuterText">외곽 문구</label>
+            <input id="corpOuterText" type="text" value="" placeholder="법인명 입력" />
+          </div>
+          <div class="field">
+            <label for="corpInnerText">내부 문구</label>
+            <input id="corpInnerText" type="text" value="" maxlength="4" placeholder="예: 인 / 대표 / 법인" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="sealColor">도장 색상</label>
+            <input id="sealColor" type="color" value="#c32026" />
+          </div>
+          <div class="field">
+            <label for="lineWidth">선 두께</label>
+            <input id="lineWidth" type="number" value="35" min="2" max="60" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>글씨체</label>
+          <div class="font-toggle" id="fontToggle">
+            <button type="button" data-font="HangulGoin1" class="active">
+              한글
+              <span class="sample">한글고인</span>
+            </button>
+            <button type="button" data-font="HanjaHaeseo">
+              한자
+              <span class="sample">漢字楷書</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="canvasSize">출력 크기(px)</label>
+            <input id="canvasSize" type="number" value="900" min="400" max="2000" />
+          </div>
+          <div class="field">
+            <label for="fontWeight">글자 굵기</label>
+            <select id="fontWeight">
+              <option value="700">기본</option>
+              <option value="800">굵게</option>
+              <option value="900">아주 굵게</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btns">
+          <button id="renderBtn">미리보기 생성</button>
+          <button id="downloadBtn" class="secondary">PNG 다운로드</button>
+        </div>
+
+        <div class="store-box">
+          <div>실제 도장 제작은 스탬피파이 스마트스토어에서 주문 가능합니다.</div>
+          <a class="store-btn" href="https://smartstore.naver.com/stampify" target="_blank" rel="noopener noreferrer">
+            스마트스토어 방문하기
+          </a>
+        </div>
+
+        <div class="share-box">
+          <div class="share-title">공유하기</div>
+          <div class="share-buttons">
+            <button type="button" id="copyLinkBtn" class="share-btn">링크 복사</button>
+            <button type="button" id="copyKakaoBtn" class="share-btn">카카오톡</button>
+            <button type="button" id="shareXBtn" class="share-btn">X</button>
+          </div>
+          <div id="shareMessage" class="share-message"></div>
+        </div>
+      </div>
+
+      <div class="panel preview">
+        <div class="canvas-box">
+          <canvas id="sealCanvas" width="900" height="900"></canvas>
+        </div>
+        <div class="note">
+          PNG는 투명 배경으로 저장됩니다.<br />
+          본 이미지 메이커는 무료 배포용이며 상업적 사용을 금합니다.
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">© Stampify</div>
+  </div>
+
+  <script>
+    const stampType = document.getElementById('stampType');
+
+    const circlePersonalFields = document.getElementById('circlePersonalFields');
+    const squareFields = document.getElementById('squareFields');
+    const circleCorporateFields = document.getElementById('circleCorporateFields');
+
+    const personalText = document.getElementById('personalText');
+    const squareText = document.getElementById('squareText');
+    const corpOuterText = document.getElementById('corpOuterText');
+    const corpInnerText = document.getElementById('corpInnerText');
+
+    const sealColor = document.getElementById('sealColor');
+    const lineWidth = document.getElementById('lineWidth');
+    const canvasSize = document.getElementById('canvasSize');
+    const fontWeight = document.getElementById('fontWeight');
+
+    const fontToggle = document.getElementById('fontToggle');
+    let currentFont = 'HangulGoin1';
+
+    const renderBtn = document.getElementById('renderBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const canvas = document.getElementById('sealCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const copyLinkBtn = document.getElementById('copyLinkBtn');
+    const copyKakaoBtn = document.getElementById('copyKakaoBtn');
+    const shareXBtn = document.getElementById('shareXBtn');
+    const shareMessage = document.getElementById('shareMessage');
+
+    function normalizeChars(text) {
+      return [...(text || '').replace(/\s+/g, '').trim()];
+    }
+
+    function getFontFamily() {
+      const fallback = '"Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif';
+      return `"${currentFont}", ${fallback}`;
+    }
+
+    function updateFieldVisibility() {
+      circlePersonalFields.style.display = 'none';
+      squareFields.style.display = 'none';
+      circleCorporateFields.style.display = 'none';
+
+      if (stampType.value === 'circle_personal') {
+        circlePersonalFields.style.display = 'block';
+      } else if (stampType.value === 'square') {
+        squareFields.style.display = 'block';
+      } else if (stampType.value === 'circle_corporate') {
+        circleCorporateFields.style.display = 'block';
+      }
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function getSquareOrderedChars(chars) {
+      const arr = chars.slice(0, 4);
+      return [arr[0], arr[1], arr[2], arr[3]].filter(Boolean);
+    }
+
+    function getArcFontSizeWithAutoSpacing(text, radius, maxArcRadians, initialSize) {
+      const chars = normalizeChars(text);
+      if (!chars.length) return initialSize;
+
+      let fs = initialSize;
+
+      while (fs > 10) {
+        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        let totalWidth = 0;
+
+        for (const ch of chars) {
+          totalWidth += ctx.measureText(ch).width;
+        }
+
+        const requiredArc = totalWidth / radius;
+        if (requiredArc <= maxArcRadians * 0.92) {
+          return fs;
+        }
+
+        fs -= 1;
+      }
+
+      return fs;
+    }
+
+    function drawArcTextAuto(text, cx, cy, radius, startAngle, endAngle, fontSize, inward = true) {
+      const chars = normalizeChars(text);
+      if (!chars.length) return;
+
+      ctx.save();
+      ctx.fillStyle = sealColor.value;
+      ctx.font = `${fontWeight.value} ${fontSize}px ${getFontFamily()}`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      const widths = chars.map(ch => ctx.measureText(ch).width);
+      const angleWidths = widths.map(w => w / radius);
+      const totalAngleNeeded = angleWidths.reduce((a, b) => a + b, 0);
+      const arcSpan = endAngle - startAngle;
+
+      const gap = Math.max(0, (arcSpan - totalAngleNeeded) / chars.length);
+      let currentAngle = startAngle - (angleWidths[0] / 2);
+
+      chars.forEach((ch, i) => {
+        const centerAngle = currentAngle + angleWidths[i] / 2;
+
+        const x = cx + Math.cos(centerAngle) * radius;
+        const y = cy + Math.sin(centerAngle) * radius;
+
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(inward ? centerAngle + Math.PI / 2 : centerAngle - Math.PI / 2);
+        ctx.fillText(ch, 0, 0);
+        ctx.restore();
+
+        currentAngle += angleWidths[i] + gap;
+      });
+
+      ctx.restore();
+    }
+
+    function drawCirclePersonalSeal() {
+      const size = canvas.width;
+      const cx = size / 2;
+      const cy = size / 2;
+      const lw = Number(lineWidth.value);
+      const color = sealColor.value;
+      const chars = normalizeChars(personalText.value);
+
+      const outerRadius = size * 0.38;
+
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lw;
+      ctx.beginPath();
+      ctx.arc(cx, cy, outerRadius, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      if (!chars.length) return;
+
+      ctx.save();
+      ctx.fillStyle = color;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      if (chars.length === 1) {
+        const fs = size * 0.39;
+        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.fillText(chars[0], cx, cy);
+      } else if (chars.length === 2) {
+        const fs = size * 0.31;
+        const offsetX = size * 0.135;
+        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.fillText(chars[0], cx - offsetX, cy);
+        ctx.fillText(chars[1], cx + offsetX, cy);
+      } else if (chars.length === 3) {
+        const fs = size * 0.26;
+        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.fillText(chars[0], cx, cy - size * 0.155);
+        ctx.fillText(chars[1], cx - size * 0.145, cy + size * 0.115);
+        ctx.fillText(chars[2], cx + size * 0.145, cy + size * 0.115);
+      } else {
+        const fs = size * 0.245;
+        const dx = size * 0.145;
+        const dy = size * 0.145;
+        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.fillText(chars[0] || '', cx - dx, cy - dy);
+        ctx.fillText(chars[1] || '', cx + dx, cy - dy);
+        ctx.fillText(chars[2] || '', cx - dx, cy + dy);
+        ctx.fillText(chars[3] || '', cx + dx, cy + dy);
+      }
+
+      ctx.restore();
+    }
+
+    function drawSquareSeal() {
+      const size = canvas.width;
+      const cx = size / 2;
+      const cy = size / 2;
+      const lw = Number(lineWidth.value);
+      const color = sealColor.value;
+
+      const rawChars = normalizeChars(squareText.value).slice(0, 4);
+      const chars = getSquareOrderedChars(rawChars);
+
+      const rectSize = size * 0.68;
+      const left = cx - rectSize / 2;
+      const top = cy - rectSize / 2;
+
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lw;
+      ctx.strokeRect(left, top, rectSize, rectSize);
+      ctx.restore();
+
+      if (!chars.length) return;
+
+      ctx.save();
+      ctx.fillStyle = color;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      if (chars.length === 1) {
+        const fs = size * 0.33;
+        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.fillText(chars[0], cx, cy);
+      } else if (chars.length === 2) {
+        const fs = size * 0.29;
+        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.fillText(chars[0], cx, cy - rectSize * 0.16);
+        ctx.fillText(chars[1], cx, cy + rectSize * 0.16);
+      } else if (chars.length === 3) {
+        const fs = size * 0.25;
+        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.fillText(chars[0], cx, cy - rectSize * 0.20);
+        ctx.fillText(chars[1], cx - rectSize * 0.18, cy + rectSize * 0.12);
+        ctx.fillText(chars[2], cx + rectSize * 0.18, cy + rectSize * 0.12);
+      } else {
+        const fs = size * 0.30;
+        const dx = rectSize * 0.22;
+        const dy = rectSize * 0.22;
+        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+
+        ctx.fillText(chars[0], cx - dx, cy - dy);
+        ctx.fillText(chars[1], cx + dx, cy - dy);
+        ctx.fillText(chars[2], cx - dx, cy + dy);
+        ctx.fillText(chars[3], cx + dx, cy + dy);
+      }
+
+      ctx.restore();
+    }
+
+    function drawCorporateInnerText(text, cx, cy, innerRadius) {
+      const chars = normalizeChars(text).slice(0, 4);
+      if (!chars.length) return;
+
+      ctx.save();
+      ctx.fillStyle = sealColor.value;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      if (chars.length === 1) {
+        const fs = canvas.width * 0.29;
+        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.fillText(chars[0], cx, cy + innerRadius * 0.18);
+      } else if (chars.length === 2) {
+        const fs = canvas.width * 0.23;
+        const dx = innerRadius * 0.52 * 0.72;
+        const y = cy + innerRadius * 0.18;
+        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.fillText(chars[0], cx - dx, y);
+        ctx.fillText(chars[1], cx + dx, y);
+      } else if (chars.length === 3) {
+        const fs = canvas.width * 0.19;
+        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.fillText(chars[0], cx, cy - innerRadius * 0.28);
+        ctx.fillText(chars[1], cx - innerRadius * 0.46 * 0.72, cy + innerRadius * 0.22);
+        ctx.fillText(chars[2], cx + innerRadius * 0.46 * 0.72, cy + innerRadius * 0.22);
+      } else {
+        const fs = canvas.width * 0.17;
+        const dx = innerRadius * 0.48 * 0.72;
+        const dy = innerRadius * 0.36;
+        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.fillText(chars[0], cx - dx, cy - dy);
+        ctx.fillText(chars[1], cx + dx, cy - dy);
+        ctx.fillText(chars[2], cx - dx, cy + dy);
+        ctx.fillText(chars[3], cx + dx, cy + dy);
+      }
+
+      ctx.restore();
+    }
+
+    function drawCircleCorporateSeal() {
+      const size = canvas.width;
+      const cx = size / 2;
+      const cy = size / 2;
+      const lw = Number(lineWidth.value);
+      const color = sealColor.value;
+
+      const outerText = corpOuterText.value || '';
+      const innerText = corpInnerText.value || '';
+
+      const outerRadius = size * 0.39;
+      const innerRadius = size * 0.23;
+
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lw;
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, outerRadius, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, innerRadius, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      if (normalizeChars(outerText).length) {
+        const startAngle = -Math.PI / 2;
+        const endAngle = Math.PI * 1.5;
+        const arcRadius = size * 0.31;
+        const maxArc = endAngle - startAngle;
+
+        const autoFontSize = getArcFontSizeWithAutoSpacing(
+          outerText,
+          arcRadius,
+          maxArc,
+          size * 0.052
+        );
+
+        drawArcTextAuto(
+          outerText,
+          cx,
+          cy,
+          arcRadius,
+          startAngle,
+          endAngle,
+          autoFontSize,
+          true
+        );
+      }
+
+      if (normalizeChars(innerText).length) {
+        drawCorporateInnerText(innerText, cx, cy, innerRadius);
+      }
+    }
+
+    function renderSeal() {
+      const size = Math.max(400, Math.min(2000, Number(canvasSize.value) || 900));
+      canvas.width = size;
+      canvas.height = size;
+      clearCanvas();
+
+      if (stampType.value === 'circle_personal') {
+        drawCirclePersonalSeal();
+      } else if (stampType.value === 'square') {
+        drawSquareSeal();
+      } else if (stampType.value === 'circle_corporate') {
+        drawCircleCorporateSeal();
+      }
+    }
+
+    function downloadPNG() {
+      const w = canvas.width;
+      const h = canvas.height;
+      const imageData = ctx.getImageData(0, 0, w, h);
+      const data = imageData.data;
+
+      let minX = w, minY = h, maxX = 0, maxY = 0;
+      let found = false;
+
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const idx = (y * w + x) * 4;
+          const alpha = data[idx + 3];
+          if (alpha > 0) {
+            found = true;
+            if (x < minX) minX = x;
+            if (y < minY) minY = y;
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
+          }
+        }
+      }
+
+      if (!found) {
+        const link = document.createElement('a');
+        link.download = 'seal.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        return;
+      }
+
+      const padding = Math.max(30, Math.round(Math.min(w, h) * 0.04));
+      minX = Math.max(0, minX - padding);
+      minY = Math.max(0, minY - padding);
+      maxX = Math.min(w - 1, maxX + padding);
+      maxY = Math.min(h - 1, maxY + padding);
+
+      const cropW = maxX - minX + 1;
+      const cropH = maxY - minY + 1;
+      const exportSize = Math.max(cropW, cropH);
+
+      const exportCanvas = document.createElement('canvas');
+      exportCanvas.width = exportSize;
+      exportCanvas.height = exportSize;
+      const exportCtx = exportCanvas.getContext('2d');
+
+      const dx = Math.floor((exportSize - cropW) / 2);
+      const dy = Math.floor((exportSize - cropH) / 2);
+
+      exportCtx.clearRect(0, 0, exportSize, exportSize);
+      exportCtx.drawImage(
+        canvas,
+        minX, minY, cropW, cropH,
+        dx, dy, cropW, cropH
+      );
+
+      const link = document.createElement('a');
+      link.download = 'seal.png';
+      link.href = exportCanvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function setShareMessage(msg) {
+      shareMessage.textContent = msg;
+      clearTimeout(setShareMessage._timer);
+      setShareMessage._timer = setTimeout(() => {
+        shareMessage.textContent = '';
+      }, 2500);
+    }
+
+    async function copyTextToClipboard(text, successMsg) {
+      try {
+        await navigator.clipboard.writeText(text);
+        setShareMessage(successMsg);
+      } catch (e) {
+        const temp = document.createElement('textarea');
+        temp.value = text;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+        setShareMessage(successMsg);
+      }
+    }
+
+    function getShareUrl() {
+      return window.location.href;
+    }
+
+    function getShareText() {
+      return '무료 도장 이미지메이커 - 스탬피파이';
+    }
+
+    stampType.addEventListener('change', () => {
+      updateFieldVisibility();
+      renderSeal();
+    });
+
+    [
+      personalText,
+      squareText,
+      corpOuterText,
+      corpInnerText,
+      sealColor,
+      lineWidth,
+      canvasSize,
+      fontWeight
+    ].forEach(el => {
+      el.addEventListener('input', renderSeal);
+      el.addEventListener('change', renderSeal);
+    });
+
+    renderBtn.addEventListener('click', renderSeal);
+    downloadBtn.addEventListener('click', downloadPNG);
+
+    copyLinkBtn.addEventListener('click', async () => {
+      await copyTextToClipboard(getShareUrl(), '링크가 복사되었습니다.');
+    });
+
+    copyKakaoBtn.addEventListener('click', async () => {
+      const text = `${getShareText()} ${getShareUrl()}`;
+      await copyTextToClipboard(text, '카카오톡 공유용 문구가 복사되었습니다.');
+    });
+
+    shareXBtn.addEventListener('click', () => {
+      const shareUrl = encodeURIComponent(getShareUrl());
+      const shareText = encodeURIComponent(getShareText());
+      window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`, '_blank');
+    });
+
+    fontToggle.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-font]');
+      if (!btn) return;
+      currentFont = btn.dataset.font;
+      fontToggle.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderSeal();
+    });
+
+    updateFieldVisibility();
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => renderSeal());
+    } else {
+      renderSeal();
+    }
+  </script>
+</body>
+</html>
