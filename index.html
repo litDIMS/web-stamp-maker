@@ -11,8 +11,28 @@
       font-display: block;
     }
     @font-face {
+      font-family: 'Injeon3';
+      src: url('./fonts/Injeon3.ttf') format('truetype');
+      font-display: block;
+    }
+    @font-face {
+      font-family: 'Choseo';
+      src: url('./fonts/Choseo.ttf') format('truetype');
+      font-display: block;
+    }
+    @font-face {
       font-family: 'HanjaHaeseo';
       src: url('./fonts/HanjaHaeseo.ttf') format('truetype');
+      font-display: block;
+    }
+    @font-face {
+      font-family: 'HanjaInjeon1';
+      src: url('./fonts/HanjaInjeon1.ttf') format('truetype');
+      font-display: block;
+    }
+    @font-face {
+      font-family: 'HanjaChoseo';
+      src: url('./fonts/HanjaChoseo.ttf') format('truetype');
       font-display: block;
     }
 
@@ -109,21 +129,39 @@
     }
 
     .font-toggle {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .font-group-label {
+      font-size: 11px;
+      color: #888;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .font-group {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
     }
 
     .font-toggle button {
-      padding: 12px 10px;
+      padding: 10px 4px;
       border: 1px solid #d8dce2;
       border-radius: 10px;
       background: #fff;
       color: #444;
-      font-size: 14px;
+      font-size: 11px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      line-height: 1.2;
     }
 
     .font-toggle button:hover {
@@ -137,19 +175,71 @@
     }
 
     .font-toggle button .sample {
-      display: block;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 400;
-      margin-top: 2px;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
     }
 
-    .font-toggle button[data-font="HangulGoin1"] .sample {
-      font-family: 'HangulGoin1', sans-serif;
+    .font-toggle button[data-font="HangulGoin1"] .sample { font-family: 'HangulGoin1', sans-serif; }
+    .font-toggle button[data-font="Injeon3"] .sample { font-family: 'Injeon3', sans-serif; }
+    .font-toggle button[data-font="Choseo"] .sample { font-family: 'Choseo', sans-serif; }
+    .font-toggle button[data-font="HanjaHaeseo"] .sample { font-family: 'HanjaHaeseo', serif; }
+    .font-toggle button[data-font="HanjaInjeon1"] .sample { font-family: 'HanjaInjeon1', serif; }
+    .font-toggle button[data-font="HanjaChoseo"] .sample { font-family: 'HanjaChoseo', serif; }
+
+    .offset-controls {
+      background: #f7f8fa;
+      border-radius: 10px;
+      padding: 12px;
     }
 
-    .font-toggle button[data-font="HanjaHaeseo"] .sample {
-      font-family: 'HanjaHaeseo', serif;
+    .offset-row {
+      display: grid;
+      grid-template-columns: 32px 1fr 44px;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .offset-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .offset-row label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #555;
+      margin: 0;
+    }
+
+    .offset-row input[type="range"] {
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      background: transparent;
+    }
+
+    .offset-row .val {
+      font-size: 12px;
+      color: #666;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .reset-btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 7px;
+      font-size: 12px;
+      background: #fff;
+      color: #555;
+      border: 1px solid #d8dce2;
+      font-weight: 600;
+    }
+
+    .reset-btn:hover {
+      background: #f0f2f5;
     }
 
     .btns {
@@ -365,14 +455,57 @@
         <div class="field">
           <label>글씨체</label>
           <div class="font-toggle" id="fontToggle">
-            <button type="button" data-font="HangulGoin1" class="active">
-              한글
-              <span class="sample">한글고인</span>
-            </button>
-            <button type="button" data-font="HanjaHaeseo">
-              한자
-              <span class="sample">漢字楷書</span>
-            </button>
+            <div>
+              <div class="font-group-label">한글</div>
+              <div class="font-group">
+                <button type="button" data-font="HangulGoin1" class="active">
+                  <span class="sample">고인</span>
+                  고인체
+                </button>
+                <button type="button" data-font="Injeon3">
+                  <span class="sample">인전</span>
+                  인전체
+                </button>
+                <button type="button" data-font="Choseo">
+                  <span class="sample">초서</span>
+                  초서체
+                </button>
+              </div>
+            </div>
+            <div>
+              <div class="font-group-label">한자</div>
+              <div class="font-group">
+                <button type="button" data-font="HanjaHaeseo">
+                  <span class="sample">楷書</span>
+                  해서체
+                </button>
+                <button type="button" data-font="HanjaInjeon1">
+                  <span class="sample">印篆</span>
+                  인전체
+                </button>
+                <button type="button" data-font="HanjaChoseo">
+                  <span class="sample">草書</span>
+                  초서체
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>글자 위치 미세조정</label>
+          <div class="offset-controls">
+            <div class="offset-row">
+              <label for="offsetX">좌우</label>
+              <input id="offsetX" type="range" min="-50" max="50" value="0" step="1" />
+              <span class="val" id="offsetXVal">0</span>
+            </div>
+            <div class="offset-row">
+              <label for="offsetY">상하</label>
+              <input id="offsetY" type="range" min="-50" max="50" value="0" step="1" />
+              <span class="val" id="offsetYVal">0</span>
+            </div>
+            <button type="button" id="offsetReset" class="reset-btn">위치 초기화</button>
           </div>
         </div>
 
@@ -448,10 +581,25 @@
     const fontToggle = document.getElementById('fontToggle');
     let currentFont = 'HangulGoin1';
 
+    const offsetX = document.getElementById('offsetX');
+    const offsetY = document.getElementById('offsetY');
+    const offsetXVal = document.getElementById('offsetXVal');
+    const offsetYVal = document.getElementById('offsetYVal');
+    const offsetReset = document.getElementById('offsetReset');
+
     const renderBtn = document.getElementById('renderBtn');
     const downloadBtn = document.getElementById('downloadBtn');
     const canvas = document.getElementById('sealCanvas');
     const ctx = canvas.getContext('2d');
+
+    // 캔버스 크기 대비 offset 비율 (슬라이더 값 / 1000) → 캔버스 픽셀로 환산
+    function getOffset() {
+      const size = canvas.width || 900;
+      return {
+        x: (Number(offsetX.value) / 1000) * size,
+        y: (Number(offsetY.value) / 1000) * size
+      };
+    }
 
     const copyLinkBtn = document.getElementById('copyLinkBtn');
     const copyKakaoBtn = document.getElementById('copyKakaoBtn');
@@ -558,6 +706,7 @@
       const lw = Number(lineWidth.value);
       const color = sealColor.value;
       const chars = normalizeChars(personalText.value);
+      const { x: ox, y: oy } = getOffset();
 
       const outerRadius = size * 0.38;
 
@@ -576,31 +725,34 @@
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
+      const tx = cx + ox;
+      const ty = cy + oy;
+
       if (chars.length === 1) {
         const fs = size * 0.39;
         ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
-        ctx.fillText(chars[0], cx, cy);
+        ctx.fillText(chars[0], tx, ty);
       } else if (chars.length === 2) {
         const fs = size * 0.31;
-        const offsetX = size * 0.135;
+        const offX = size * 0.135;
         ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
-        ctx.fillText(chars[0], cx - offsetX, cy);
-        ctx.fillText(chars[1], cx + offsetX, cy);
+        ctx.fillText(chars[0], tx - offX, ty);
+        ctx.fillText(chars[1], tx + offX, ty);
       } else if (chars.length === 3) {
         const fs = size * 0.26;
         ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
-        ctx.fillText(chars[0], cx, cy - size * 0.155);
-        ctx.fillText(chars[1], cx - size * 0.145, cy + size * 0.115);
-        ctx.fillText(chars[2], cx + size * 0.145, cy + size * 0.115);
+        ctx.fillText(chars[0], tx, ty - size * 0.155);
+        ctx.fillText(chars[1], tx - size * 0.145, ty + size * 0.115);
+        ctx.fillText(chars[2], tx + size * 0.145, ty + size * 0.115);
       } else {
         const fs = size * 0.245;
         const dx = size * 0.145;
         const dy = size * 0.145;
         ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
-        ctx.fillText(chars[0] || '', cx - dx, cy - dy);
-        ctx.fillText(chars[1] || '', cx + dx, cy - dy);
-        ctx.fillText(chars[2] || '', cx - dx, cy + dy);
-        ctx.fillText(chars[3] || '', cx + dx, cy + dy);
+        ctx.fillText(chars[0] || '', tx - dx, ty - dy);
+        ctx.fillText(chars[1] || '', tx + dx, ty - dy);
+        ctx.fillText(chars[2] || '', tx - dx, ty + dy);
+        ctx.fillText(chars[3] || '', tx + dx, ty + dy);
       }
 
       ctx.restore();
@@ -612,6 +764,7 @@
       const cy = size / 2;
       const lw = Number(lineWidth.value);
       const color = sealColor.value;
+      const { x: ox, y: oy } = getOffset();
 
       const rawChars = normalizeChars(squareText.value).slice(0, 4);
       const chars = getSquareOrderedChars(rawChars);
@@ -633,31 +786,34 @@
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
+      const tx = cx + ox;
+      const ty = cy + oy;
+
       if (chars.length === 1) {
         const fs = size * 0.33;
         ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
-        ctx.fillText(chars[0], cx, cy);
+        ctx.fillText(chars[0], tx, ty);
       } else if (chars.length === 2) {
         const fs = size * 0.29;
         ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
-        ctx.fillText(chars[0], cx, cy - rectSize * 0.16);
-        ctx.fillText(chars[1], cx, cy + rectSize * 0.16);
+        ctx.fillText(chars[0], tx, ty - rectSize * 0.16);
+        ctx.fillText(chars[1], tx, ty + rectSize * 0.16);
       } else if (chars.length === 3) {
         const fs = size * 0.25;
         ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
-        ctx.fillText(chars[0], cx, cy - rectSize * 0.20);
-        ctx.fillText(chars[1], cx - rectSize * 0.18, cy + rectSize * 0.12);
-        ctx.fillText(chars[2], cx + rectSize * 0.18, cy + rectSize * 0.12);
+        ctx.fillText(chars[0], tx, ty - rectSize * 0.20);
+        ctx.fillText(chars[1], tx - rectSize * 0.18, ty + rectSize * 0.12);
+        ctx.fillText(chars[2], tx + rectSize * 0.18, ty + rectSize * 0.12);
       } else {
         const fs = size * 0.30;
         const dx = rectSize * 0.22;
         const dy = rectSize * 0.22;
         ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
 
-        ctx.fillText(chars[0], cx - dx, cy - dy);
-        ctx.fillText(chars[1], cx + dx, cy - dy);
-        ctx.fillText(chars[2], cx - dx, cy + dy);
-        ctx.fillText(chars[3], cx + dx, cy + dy);
+        ctx.fillText(chars[0], tx - dx, ty - dy);
+        ctx.fillText(chars[1], tx + dx, ty - dy);
+        ctx.fillText(chars[2], tx - dx, ty + dy);
+        ctx.fillText(chars[3], tx + dx, ty + dy);
       }
 
       ctx.restore();
@@ -666,38 +822,42 @@
     function drawCorporateInnerText(text, cx, cy, innerRadius) {
       const chars = normalizeChars(text).slice(0, 4);
       if (!chars.length) return;
+      const { x: ox, y: oy } = getOffset();
 
       ctx.save();
       ctx.fillStyle = sealColor.value;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
+      const tx = cx + ox;
+      const ty = cy + oy;
+
       if (chars.length === 1) {
         const fs = canvas.width * 0.29;
         ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
-        ctx.fillText(chars[0], cx, cy + innerRadius * 0.18);
+        ctx.fillText(chars[0], tx, ty + innerRadius * 0.18);
       } else if (chars.length === 2) {
         const fs = canvas.width * 0.23;
         const dx = innerRadius * 0.52 * 0.72;
-        const y = cy + innerRadius * 0.18;
+        const y = ty + innerRadius * 0.18;
         ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
-        ctx.fillText(chars[0], cx - dx, y);
-        ctx.fillText(chars[1], cx + dx, y);
+        ctx.fillText(chars[0], tx - dx, y);
+        ctx.fillText(chars[1], tx + dx, y);
       } else if (chars.length === 3) {
         const fs = canvas.width * 0.19;
         ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
-        ctx.fillText(chars[0], cx, cy - innerRadius * 0.28);
-        ctx.fillText(chars[1], cx - innerRadius * 0.46 * 0.72, cy + innerRadius * 0.22);
-        ctx.fillText(chars[2], cx + innerRadius * 0.46 * 0.72, cy + innerRadius * 0.22);
+        ctx.fillText(chars[0], tx, ty - innerRadius * 0.28);
+        ctx.fillText(chars[1], tx - innerRadius * 0.46 * 0.72, ty + innerRadius * 0.22);
+        ctx.fillText(chars[2], tx + innerRadius * 0.46 * 0.72, ty + innerRadius * 0.22);
       } else {
         const fs = canvas.width * 0.17;
         const dx = innerRadius * 0.48 * 0.72;
         const dy = innerRadius * 0.36;
         ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
-        ctx.fillText(chars[0], cx - dx, cy - dy);
-        ctx.fillText(chars[1], cx + dx, cy - dy);
-        ctx.fillText(chars[2], cx - dx, cy + dy);
-        ctx.fillText(chars[3], cx + dx, cy + dy);
+        ctx.fillText(chars[0], tx - dx, ty - dy);
+        ctx.fillText(chars[1], tx + dx, ty - dy);
+        ctx.fillText(chars[2], tx - dx, ty + dy);
+        ctx.fillText(chars[3], tx + dx, ty + dy);
       }
 
       ctx.restore();
@@ -913,6 +1073,29 @@
       renderSeal();
     });
 
+    function updateOffsetLabels() {
+      offsetXVal.textContent = offsetX.value;
+      offsetYVal.textContent = offsetY.value;
+    }
+
+    offsetX.addEventListener('input', () => {
+      updateOffsetLabels();
+      renderSeal();
+    });
+
+    offsetY.addEventListener('input', () => {
+      updateOffsetLabels();
+      renderSeal();
+    });
+
+    offsetReset.addEventListener('click', () => {
+      offsetX.value = 0;
+      offsetY.value = 0;
+      updateOffsetLabels();
+      renderSeal();
+    });
+
+    updateOffsetLabels();
     updateFieldVisibility();
 
     if (document.fonts && document.fonts.ready) {
