@@ -79,8 +79,56 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 360px 1fr;
+      grid-template-columns: 220px 360px 1fr;
       gap: 24px;
+    }
+
+    .examples {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .example-item {
+      text-align: center;
+    }
+
+    .example-item img {
+      width: 100%;
+      max-width: 180px;
+      height: auto;
+      display: block;
+      margin: 0 auto 6px;
+      border-radius: 8px;
+      background: #fafafa;
+    }
+
+    .example-item .caption {
+      font-size: 12px;
+      color: #666;
+      font-weight: 700;
+    }
+
+    .example-item .sub {
+      font-size: 11px;
+      color: #999;
+      margin-top: 2px;
+    }
+
+    .examples-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0 0 4px;
+      color: #444;
+      text-align: center;
+    }
+
+    .examples-note {
+      font-size: 11px;
+      color: #999;
+      text-align: center;
+      line-height: 1.5;
+      margin-bottom: 6px;
     }
 
     .panel {
@@ -139,6 +187,13 @@
       color: #888;
       font-weight: 700;
       margin-bottom: 4px;
+    }
+
+    .font-group-hint {
+      font-size: 10px;
+      color: #b8bcc4;
+      font-weight: 400;
+      margin-left: 4px;
     }
 
     .font-group {
@@ -244,9 +299,12 @@
 
     .btns {
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+      justify-content: center;
       margin-top: 10px;
+    }
+
+    .btns button {
+      min-width: 200px;
     }
 
     button {
@@ -377,11 +435,29 @@
       color: #888;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 1100px) {
+      .layout {
+        grid-template-columns: 1fr 1fr;
+      }
+      .examples {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        justify-content: center;
+        gap: 24px;
+      }
+      .example-item img {
+        max-width: 140px;
+      }
+    }
+
+    @media (max-width: 700px) {
       .layout {
         grid-template-columns: 1fr;
       }
-
+      .examples {
+        flex-direction: row;
+        justify-content: center;
+      }
       .canvas-box {
         min-height: 420px;
       }
@@ -403,6 +479,21 @@
     </div>
 
     <div class="layout">
+      <div class="panel examples">
+        <div class="examples-title">완성 예시</div>
+        <div class="examples-note">아래는 실제 도장 예시입니다.<br>참고하여 만들어보세요.</div>
+        <div class="example-item">
+          <img src="./example_hangul.png" alt="한글 도장 예시 - 홍길동인">
+          <div class="caption">한글 도장</div>
+          <div class="sub">홍길동인</div>
+        </div>
+        <div class="example-item">
+          <img src="./example_hanja.png" alt="한자 도장 예시">
+          <div class="caption">한자 도장</div>
+          <div class="sub">전서체 예시</div>
+        </div>
+      </div>
+
       <div class="panel">
         <h2>설정</h2>
 
@@ -473,7 +564,7 @@
               </div>
             </div>
             <div>
-              <div class="font-group-label">한자</div>
+              <div class="font-group-label">한자 <span class="font-group-hint">*한자폰트 선택 시 이름란에 한자를 입력해 주세요</span></div>
               <div class="font-group">
                 <button type="button" data-font="HanjaHaeseo">
                   <span class="sample">楷書</span>
@@ -510,8 +601,7 @@
         </div>
 
         <div class="btns">
-          <button id="renderBtn">미리보기 생성</button>
-          <button id="downloadBtn" class="secondary">PNG 다운로드</button>
+          <button id="downloadBtn">PNG 다운로드</button>
         </div>
 
         <div class="store-box">
@@ -570,7 +660,6 @@
     const offsetYVal = document.getElementById('offsetYVal');
     const offsetReset = document.getElementById('offsetReset');
 
-    const renderBtn = document.getElementById('renderBtn');
     const downloadBtn = document.getElementById('downloadBtn');
     const canvas = document.getElementById('sealCanvas');
     const ctx = canvas.getContext('2d');
@@ -1027,7 +1116,6 @@
       el.addEventListener('change', renderSeal);
     });
 
-    renderBtn.addEventListener('click', renderSeal);
     downloadBtn.addEventListener('click', downloadPNG);
 
     copyLinkBtn.addEventListener('click', async () => {
