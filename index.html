@@ -79,14 +79,15 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 220px 360px 1fr;
-      gap: 24px;
+      grid-template-columns: 160px 360px 1fr;
+      gap: 20px;
     }
 
     .examples {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 10px;
+      padding: 14px;
     }
 
     .example-item {
@@ -95,40 +96,40 @@
 
     .example-item img {
       width: 100%;
-      max-width: 180px;
+      max-width: 110px;
       height: auto;
       display: block;
-      margin: 0 auto 6px;
-      border-radius: 8px;
+      margin: 0 auto 4px;
+      border-radius: 6px;
       background: #fafafa;
     }
 
     .example-item .caption {
-      font-size: 12px;
+      font-size: 11px;
       color: #666;
       font-weight: 700;
     }
 
     .example-item .sub {
-      font-size: 11px;
+      font-size: 10px;
       color: #999;
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     .examples-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
-      margin: 0 0 4px;
+      margin: 0 0 2px;
       color: #444;
       text-align: center;
     }
 
     .examples-note {
-      font-size: 11px;
+      font-size: 10px;
       color: #999;
       text-align: center;
-      line-height: 1.5;
-      margin-bottom: 6px;
+      line-height: 1.4;
+      margin-bottom: 4px;
     }
 
     .panel {
@@ -443,10 +444,11 @@
         grid-column: 1 / -1;
         flex-direction: row;
         justify-content: center;
-        gap: 24px;
+        gap: 20px;
+        padding: 12px;
       }
       .example-item img {
-        max-width: 140px;
+        max-width: 90px;
       }
     }
 
@@ -539,7 +541,7 @@
           </div>
           <div class="field">
             <label for="lineWidth">선 두께</label>
-            <input id="lineWidth" type="number" value="35" min="2" max="60" />
+            <input id="lineWidth" type="number" value="25" min="2" max="60" />
           </div>
         </div>
 
@@ -597,6 +599,18 @@
               <span class="val" id="offsetYVal">0</span>
             </div>
             <button type="button" id="offsetReset" class="reset-btn">기본 위치로</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>글자 크기 조정</label>
+          <div class="offset-controls">
+            <div class="offset-row">
+              <label for="charScale">크기</label>
+              <input id="charScale" type="range" min="80" max="160" value="100" step="1" />
+              <span class="val" id="charScaleVal">100%</span>
+            </div>
+            <button type="button" id="scaleReset" class="reset-btn">크기 초기화</button>
           </div>
         </div>
 
@@ -660,6 +674,10 @@
     const offsetYVal = document.getElementById('offsetYVal');
     const offsetReset = document.getElementById('offsetReset');
 
+    const charScale = document.getElementById('charScale');
+    const charScaleVal = document.getElementById('charScaleVal');
+    const scaleReset = document.getElementById('scaleReset');
+
     const downloadBtn = document.getElementById('downloadBtn');
     const canvas = document.getElementById('sealCanvas');
     const ctx = canvas.getContext('2d');
@@ -671,6 +689,11 @@
         x: (Number(offsetX.value) / 1000) * size,
         y: (Number(offsetY.value) / 1000) * size
       };
+    }
+
+    // 글자 크기 배율 (슬라이더 값 / 100) — 100이면 1.0배, 130이면 1.3배
+    function getCharScale() {
+      return Number(charScale.value) / 100;
     }
 
     const copyLinkBtn = document.getElementById('copyLinkBtn');
@@ -779,6 +802,7 @@
       const color = sealColor.value;
       const chars = normalizeChars(personalText.value);
       const { x: ox, y: oy } = getOffset();
+      const scale = getCharScale();
 
       const outerRadius = size * 0.38;
 
@@ -801,23 +825,23 @@
       const ty = cy + oy;
 
       if (chars.length === 1) {
-        const fs = size * 0.39;
+        const fs = size * 0.39 * scale;
         ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx, ty);
       } else if (chars.length === 2) {
-        const fs = size * 0.31;
+        const fs = size * 0.31 * scale;
         const offX = size * 0.135;
         ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx - offX, ty);
         ctx.fillText(chars[1], tx + offX, ty);
       } else if (chars.length === 3) {
-        const fs = size * 0.26;
+        const fs = size * 0.26 * scale;
         ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx, ty - size * 0.155);
         ctx.fillText(chars[1], tx - size * 0.145, ty + size * 0.115);
         ctx.fillText(chars[2], tx + size * 0.145, ty + size * 0.115);
       } else {
-        const fs = size * 0.245;
+        const fs = size * 0.245 * scale;
         const dx = size * 0.145;
         const dy = size * 0.145;
         ctx.font = `${fs}px ${getFontFamily()}`;
@@ -837,6 +861,7 @@
       const lw = Number(lineWidth.value);
       const color = sealColor.value;
       const { x: ox, y: oy } = getOffset();
+      const scale = getCharScale();
 
       const rawChars = normalizeChars(squareText.value).slice(0, 4);
       const chars = getSquareOrderedChars(rawChars);
@@ -862,22 +887,22 @@
       const ty = cy + oy;
 
       if (chars.length === 1) {
-        const fs = size * 0.33;
+        const fs = size * 0.33 * scale;
         ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx, ty);
       } else if (chars.length === 2) {
-        const fs = size * 0.29;
+        const fs = size * 0.29 * scale;
         ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx, ty - rectSize * 0.16);
         ctx.fillText(chars[1], tx, ty + rectSize * 0.16);
       } else if (chars.length === 3) {
-        const fs = size * 0.25;
+        const fs = size * 0.25 * scale;
         ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx, ty - rectSize * 0.20);
         ctx.fillText(chars[1], tx - rectSize * 0.18, ty + rectSize * 0.12);
         ctx.fillText(chars[2], tx + rectSize * 0.18, ty + rectSize * 0.12);
       } else {
-        const fs = size * 0.30;
+        const fs = size * 0.30 * scale;
         const dx = rectSize * 0.22;
         const dy = rectSize * 0.22;
         ctx.font = `${fs}px ${getFontFamily()}`;
@@ -895,6 +920,7 @@
       const chars = normalizeChars(text).slice(0, 4);
       if (!chars.length) return;
       const { x: ox, y: oy } = getOffset();
+      const scale = getCharScale();
 
       ctx.save();
       ctx.fillStyle = sealColor.value;
@@ -905,24 +931,24 @@
       const ty = cy + oy;
 
       if (chars.length === 1) {
-        const fs = canvas.width * 0.29;
+        const fs = canvas.width * 0.29 * scale;
         ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx, ty + innerRadius * 0.18);
       } else if (chars.length === 2) {
-        const fs = canvas.width * 0.23;
+        const fs = canvas.width * 0.23 * scale;
         const dx = innerRadius * 0.52 * 0.72;
         const y = ty + innerRadius * 0.18;
         ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx - dx, y);
         ctx.fillText(chars[1], tx + dx, y);
       } else if (chars.length === 3) {
-        const fs = canvas.width * 0.19;
+        const fs = canvas.width * 0.19 * scale;
         ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx, ty - innerRadius * 0.28);
         ctx.fillText(chars[1], tx - innerRadius * 0.46 * 0.72, ty + innerRadius * 0.22);
         ctx.fillText(chars[2], tx + innerRadius * 0.46 * 0.72, ty + innerRadius * 0.22);
       } else {
-        const fs = canvas.width * 0.17;
+        const fs = canvas.width * 0.17 * scale;
         const dx = innerRadius * 0.48 * 0.72;
         const dy = innerRadius * 0.36;
         ctx.font = `${fs}px ${getFontFamily()}`;
@@ -966,12 +992,13 @@
         const endAngle = Math.PI * 1.5;
         const arcRadius = size * 0.31;
         const maxArc = endAngle - startAngle;
+        const scale = getCharScale();
 
         const autoFontSize = getArcFontSizeWithAutoSpacing(
           outerText,
           arcRadius,
           maxArc,
-          size * 0.052
+          size * 0.052 * scale
         );
 
         drawArcTextAuto(
@@ -1182,9 +1209,25 @@
       renderSeal();
     });
 
+    function updateScaleLabel() {
+      charScaleVal.textContent = charScale.value + '%';
+    }
+
+    charScale.addEventListener('input', () => {
+      updateScaleLabel();
+      renderSeal();
+    });
+
+    scaleReset.addEventListener('click', () => {
+      charScale.value = 100;
+      updateScaleLabel();
+      renderSeal();
+    });
+
     // 초기 로드 시 기본 폰트의 offset 적용
     applyFontDefaultOffset(currentFont);
     updateOffsetLabels();
+    updateScaleLabel();
     updateFieldVisibility();
 
     if (document.fonts && document.fonts.ready) {
