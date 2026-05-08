@@ -497,30 +497,15 @@
           <div class="offset-controls">
             <div class="offset-row">
               <label for="offsetX">좌우</label>
-              <input id="offsetX" type="range" min="-50" max="50" value="0" step="1" />
+              <input id="offsetX" type="range" min="-50" max="50" value="36" step="1" />
               <span class="val" id="offsetXVal">0</span>
             </div>
             <div class="offset-row">
               <label for="offsetY">상하</label>
-              <input id="offsetY" type="range" min="-50" max="50" value="0" step="1" />
+              <input id="offsetY" type="range" min="-50" max="50" value="-5" step="1" />
               <span class="val" id="offsetYVal">0</span>
             </div>
-            <button type="button" id="offsetReset" class="reset-btn">위치 초기화</button>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="field">
-            <label for="canvasSize">출력 크기(px)</label>
-            <input id="canvasSize" type="number" value="900" min="400" max="2000" />
-          </div>
-          <div class="field">
-            <label for="fontWeight">글자 굵기</label>
-            <select id="fontWeight">
-              <option value="700">기본</option>
-              <option value="800">굵게</option>
-              <option value="900">아주 굵게</option>
-            </select>
+            <button type="button" id="offsetReset" class="reset-btn">기본 위치로</button>
           </div>
         </div>
 
@@ -575,8 +560,6 @@
 
     const sealColor = document.getElementById('sealColor');
     const lineWidth = document.getElementById('lineWidth');
-    const canvasSize = document.getElementById('canvasSize');
-    const fontWeight = document.getElementById('fontWeight');
 
     const fontToggle = document.getElementById('fontToggle');
     let currentFont = 'HangulGoin1';
@@ -645,7 +628,7 @@
       let fs = initialSize;
 
       while (fs > 10) {
-        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.font = `${fs}px ${getFontFamily()}`;
         let totalWidth = 0;
 
         for (const ch of chars) {
@@ -669,7 +652,7 @@
 
       ctx.save();
       ctx.fillStyle = sealColor.value;
-      ctx.font = `${fontWeight.value} ${fontSize}px ${getFontFamily()}`;
+      ctx.font = `${fontSize}px ${getFontFamily()}`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
@@ -730,17 +713,17 @@
 
       if (chars.length === 1) {
         const fs = size * 0.39;
-        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx, ty);
       } else if (chars.length === 2) {
         const fs = size * 0.31;
         const offX = size * 0.135;
-        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx - offX, ty);
         ctx.fillText(chars[1], tx + offX, ty);
       } else if (chars.length === 3) {
         const fs = size * 0.26;
-        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx, ty - size * 0.155);
         ctx.fillText(chars[1], tx - size * 0.145, ty + size * 0.115);
         ctx.fillText(chars[2], tx + size * 0.145, ty + size * 0.115);
@@ -748,7 +731,7 @@
         const fs = size * 0.245;
         const dx = size * 0.145;
         const dy = size * 0.145;
-        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0] || '', tx - dx, ty - dy);
         ctx.fillText(chars[1] || '', tx + dx, ty - dy);
         ctx.fillText(chars[2] || '', tx - dx, ty + dy);
@@ -791,16 +774,16 @@
 
       if (chars.length === 1) {
         const fs = size * 0.33;
-        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx, ty);
       } else if (chars.length === 2) {
         const fs = size * 0.29;
-        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx, ty - rectSize * 0.16);
         ctx.fillText(chars[1], tx, ty + rectSize * 0.16);
       } else if (chars.length === 3) {
         const fs = size * 0.25;
-        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx, ty - rectSize * 0.20);
         ctx.fillText(chars[1], tx - rectSize * 0.18, ty + rectSize * 0.12);
         ctx.fillText(chars[2], tx + rectSize * 0.18, ty + rectSize * 0.12);
@@ -808,7 +791,7 @@
         const fs = size * 0.30;
         const dx = rectSize * 0.22;
         const dy = rectSize * 0.22;
-        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.font = `${fs}px ${getFontFamily()}`;
 
         ctx.fillText(chars[0], tx - dx, ty - dy);
         ctx.fillText(chars[1], tx + dx, ty - dy);
@@ -834,18 +817,18 @@
 
       if (chars.length === 1) {
         const fs = canvas.width * 0.29;
-        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx, ty + innerRadius * 0.18);
       } else if (chars.length === 2) {
         const fs = canvas.width * 0.23;
         const dx = innerRadius * 0.52 * 0.72;
         const y = ty + innerRadius * 0.18;
-        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx - dx, y);
         ctx.fillText(chars[1], tx + dx, y);
       } else if (chars.length === 3) {
         const fs = canvas.width * 0.19;
-        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx, ty - innerRadius * 0.28);
         ctx.fillText(chars[1], tx - innerRadius * 0.46 * 0.72, ty + innerRadius * 0.22);
         ctx.fillText(chars[2], tx + innerRadius * 0.46 * 0.72, ty + innerRadius * 0.22);
@@ -853,7 +836,7 @@
         const fs = canvas.width * 0.17;
         const dx = innerRadius * 0.48 * 0.72;
         const dy = innerRadius * 0.36;
-        ctx.font = `${fontWeight.value} ${fs}px ${getFontFamily()}`;
+        ctx.font = `${fs}px ${getFontFamily()}`;
         ctx.fillText(chars[0], tx - dx, ty - dy);
         ctx.fillText(chars[1], tx + dx, ty - dy);
         ctx.fillText(chars[2], tx - dx, ty + dy);
@@ -920,7 +903,7 @@
     }
 
     function renderSeal() {
-      const size = Math.max(400, Math.min(2000, Number(canvasSize.value) || 900));
+      const size = 900;
       canvas.width = size;
       canvas.height = size;
       clearCanvas();
@@ -1038,9 +1021,7 @@
       corpOuterText,
       corpInnerText,
       sealColor,
-      lineWidth,
-      canvasSize,
-      fontWeight
+      lineWidth
     ].forEach(el => {
       el.addEventListener('input', renderSeal);
       el.addEventListener('change', renderSeal);
@@ -1064,12 +1045,31 @@
       window.open(`https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`, '_blank');
     });
 
+    // 폰트별 기본 위치 보정값 (각 폰트의 메트릭 차이 보정)
+    const FONT_DEFAULT_OFFSET = {
+      HangulGoin1:  { x: 36, y: -5 },
+      Injeon3:      { x: 30, y: -7 },
+      Choseo:       { x: 33, y: -1 },
+      HanjaHaeseo:  { x: 24, y: -5 },
+      HanjaInjeon1: { x: 17, y: -5 },
+      HanjaChoseo:  { x: 21, y: -5 }
+    };
+
+    function applyFontDefaultOffset(fontKey) {
+      const def = FONT_DEFAULT_OFFSET[fontKey];
+      if (!def) return;
+      offsetX.value = def.x;
+      offsetY.value = def.y;
+      updateOffsetLabels();
+    }
+
     fontToggle.addEventListener('click', (e) => {
       const btn = e.target.closest('button[data-font]');
       if (!btn) return;
       currentFont = btn.dataset.font;
       fontToggle.querySelectorAll('button').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      applyFontDefaultOffset(currentFont);
       renderSeal();
     });
 
@@ -1089,12 +1089,13 @@
     });
 
     offsetReset.addEventListener('click', () => {
-      offsetX.value = 0;
-      offsetY.value = 0;
-      updateOffsetLabels();
+      // 현재 선택된 폰트의 기본값으로 리셋
+      applyFontDefaultOffset(currentFont);
       renderSeal();
     });
 
+    // 초기 로드 시 기본 폰트의 offset 적용
+    applyFontDefaultOffset(currentFont);
     updateOffsetLabels();
     updateFieldVisibility();
 
